@@ -1,0 +1,15 @@
+# Ignore files that should not be sent to Google Cloud Build.
+# Explicitly include the models directory even though it is ignored by git.
+
+.git
+.git/**
+.gitignore
+.venv
+.venv/**
+__pycache__
+**/__pycache__
+*.pyc
+*.pyo
+*.pyd
+.DS_Store
+.env
