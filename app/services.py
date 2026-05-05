@@ -11,14 +11,14 @@ def bytes_to_cv2_image(image_bytes):
     image = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
     return image
 
-def detect_and_crop_muzzle(image, detector):
+def detect_and_crop_muzzle(image, detector, image_name):
     
     results = detector.predict(image, conf=0.25, verbose=False)
     result = results[0]
     boxes = result.boxes
     
     if len(boxes) == 0:
-        raise ValueError("No muzzle detected in the image.")
+        raise ValueError(f"No muzzle detected in {image_name}.")
     
     box = boxes[0]
     x1, y1, x2, y2 = box.xyxy[0].cpu().numpy().astype(int)
@@ -40,13 +40,20 @@ def calculate_similarity(image1_bytes, image2_bytes, similarity_model, detector,
     image1 = bytes_to_cv2_image(image1_bytes)
     image2 = bytes_to_cv2_image(image2_bytes)
     
-    crop1 = detect_and_crop_muzzle(image1, detector)
-    crop2 = detect_and_crop_muzzle(image2, detector)
+    crop1 = detect_and_crop_muzzle(image1, detector, "Image 1")
+    crop2 = detect_and_crop_muzzle(image2, detector, "Image 2")
     
     emb1 = get_embedding(crop1, similarity_model, device)
     emb2 = get_embedding(crop2, similarity_model, device)
     
     similarity = F.cosine_similarity(emb1, emb2).item()
     distance = torch.dist(emb1, emb2).item()
-        
-    return {"similarity_score": similarity, "distance": distance}
+    
+    if similarity > 0.75:
+        same_cow = True
+        message = "The two images likely belong to the same cow."
+    else:
+        same_cow = False
+        message = "The two images likely belong to different cows."
+
+    return {"similarity_score": similarity, "distance": distance, "same_cow": same_cow, "message": message}
