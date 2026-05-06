@@ -5,6 +5,7 @@ import torch
 import torch.nn.functional as F
 
 from app.models import val_transform
+from app.schemas import VerificationData, VerificationResponse
 
 def bytes_to_cv2_image(image_bytes):
     np_array = np.frombuffer(image_bytes, np.uint8)
@@ -49,11 +50,18 @@ def calculate_similarity(image1_bytes, image2_bytes, similarity_model, detector,
     similarity = F.cosine_similarity(emb1, emb2).item()
     distance = torch.dist(emb1, emb2).item()
     
-    if similarity > 0.75:
-        same_cow = True
-        message = "The two images likely belong to the same cow."
-    else:
-        same_cow = False
-        message = "The two images likely belong to different cows."
-
-    return {"similarity_score": similarity, "distance": distance, "same_cow": same_cow, "message": message}
+    same_cow = similarity > 0.75
+    
+    return VerificationResponse(
+        success=True,
+        message=(
+            "The two images likely belong to the same cow."
+            if same_cow
+            else "The two images likely belong to different cows."
+        ),
+        data=VerificationData(
+            similarity_score=similarity,
+            euclidian_distance=distance,
+            same_cow=same_cow
+        )
+    )
