@@ -8,3 +8,5 @@ pillow
 opencv-python
 numpy
 python-dotenv
+requests
+matplotlib
