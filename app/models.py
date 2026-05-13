@@ -21,13 +21,30 @@ def load_similarity_model(model_path, embedding_dim=128, device=None):
     if device is None:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    model = EmbeddingNet(embedding_dim=embedding_dim)
+    
     checkpoint = torch.load(model_path, map_location=device)
+    
+    embedding_dim = checkpoint.get("embedding_dim", embedding_dim)
+    
+    model = EmbeddingNet(embedding_dim=embedding_dim)
     model.load_state_dict(checkpoint['model_state_dict'])
     model.to(device)
     model.eval()
     
-    return model
+    threshold = checkpoint.get("best_threshold", 0.75)
+    
+    model_info = {
+        "epoch": checkpoint.get("epoch"),
+        "best_auc": checkpoint.get("best_auc"),
+        "best_accuracy": checkpoint.get("best_accuracy"),
+        "eer": checkpoint.get("eer"),
+        "eer_threshold": checkpoint.get("eer_threshold"),
+        "best_threshold": threshold,
+        "pos_mean": checkpoint.get("pos_mean"),
+        "neg_mean": checkpoint.get("neg_mean"),
+    }
+    
+    return model, threshold, model_info
 
 def load_detection_model(model_path):
     return YOLO(model_path)

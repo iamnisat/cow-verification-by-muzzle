@@ -36,7 +36,7 @@ def get_embedding(crop, similarity_model, device):
         embedding = similarity_model(tensor)
     return embedding
 
-def calculate_similarity(image1_bytes, image2_bytes, similarity_model, detector, device):
+def calculate_similarity(image1_bytes, image2_bytes, similarity_model, detector, device, threshold):
     
     image1 = bytes_to_cv2_image(image1_bytes)
     image2 = bytes_to_cv2_image(image2_bytes)
@@ -50,7 +50,7 @@ def calculate_similarity(image1_bytes, image2_bytes, similarity_model, detector,
     similarity = F.cosine_similarity(emb1, emb2).item()
     distance = torch.dist(emb1, emb2).item()
     
-    same_cow = similarity > 0.75
+    same_cow = similarity >= threshold
     
     return VerificationResponse(
         success=True,

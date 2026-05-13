@@ -23,11 +23,11 @@ async def lifespan(app: FastAPI):
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    similarity_model_path = "models/muzzle_similarity_model.pth"
+    similarity_model_path = "models/best_group_resnet50_model.pth"
     detection_model_path = "models/muzzle_detector_model.pt"
 
     app_state["device"] = device
-    app_state["similarity_model"] = load_similarity_model(
+    app_state["similarity_model"], app_state["threshold"], app_state["model_info"] = load_similarity_model(
         model_path=similarity_model_path,
         embedding_dim=128,
         device=device,
@@ -76,6 +76,7 @@ async def verify_cow(
             similarity_model=app_state["similarity_model"],
             detector=app_state["detector"],
             device=app_state["device"],
+            threshold=app_state["threshold"],
         )
 
         return result
