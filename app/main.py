@@ -76,7 +76,7 @@ async def verify_cow(
             similarity_model=app_state["similarity_model"],
             detector=app_state["detector"],
             device=app_state["device"],
-            threshold=80,
+            threshold=0.8,
         )
 
         return result
