@@ -14,7 +14,7 @@ def bytes_to_cv2_image(image_bytes):
 
 def detect_and_crop_muzzle(image, detector, image_name):
     
-    results = detector.predict(image, conf=0.25, verbose=False)
+    results = detector.predict(image, conf=0.01, verbose=False)
     result = results[0]
     boxes = result.boxes
     
