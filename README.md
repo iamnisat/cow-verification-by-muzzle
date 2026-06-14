@@ -1,3 +1,6 @@
+## Resourse
+https://drive.google.com/drive/folders/1nld8bKcNm7tSYTyIWBC1ouVIlNtp7ovI?usp=sharing
+
 ## ------------ Google Cloud Platform ------------
 
 # Google Cloud authentication
