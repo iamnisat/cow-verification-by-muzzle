@@ -1,5 +1,10 @@
+## Model path
+- Similarity model: `models/best_group_resnet50_model.pth`
+- Detection model: `models/muzzle_detector_model.pt`
+
 ## Resourse
-https://drive.google.com/drive/folders/1nld8bKcNm7tSYTyIWBC1ouVIlNtp7ovI?usp=sharing
+- Similarity model: https://drive.google.com/file/d/1Wnoqx0W2PRu6GEUfVweJE8aSiwPvvrlu/view?usp=sharing
+- Detection model: https://drive.google.com/file/d/1eF0splXMrwZEHyJb33MftaaG6CqSmiBd/view?usp=sharing
 
 ## ------------ Google Cloud Platform ------------
 
